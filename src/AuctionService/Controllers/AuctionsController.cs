@@ -32,7 +32,7 @@ namespace AuctionService.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AuctionDto>> GetAuction(Guid id)
+        public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id)
         {
             var auction = await _context.Auctions
                 .Include(a => a.Item)
@@ -41,6 +41,20 @@ namespace AuctionService.Controllers
             if (auction == null) return NotFound();
             
             return _mapper.Map<AuctionDto>(auction);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
+        {
+            var auction = _mapper.Map<Auction>(auctionDto);
+            auction.Seller = "test";
+
+            _context.Auctions.Add(auction);
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (!result) return BadRequest("Could not save changes to the DB");
+
+            return CreatedAtAction(nameof(GetAuctionById), new {auction.Id}, _mapper.Map<AuctionDto>(auction));
         }
     }
 }
