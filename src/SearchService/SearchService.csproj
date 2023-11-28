@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Entities" Version="22.0.0" />
+  </ItemGroup>
+
 </Project>
