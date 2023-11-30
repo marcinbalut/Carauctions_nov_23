@@ -12,7 +12,7 @@ namespace SearchService.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Item>>> SearchItems([FromQuery]SearchParams searchParams)
         {
-            var query = DB.PagedSearch<Item>();
+            var query = DB.PagedSearch<Item, Item>();
 
             query.Sort(i => i.Ascending(i => i.Make));
 
@@ -20,6 +20,13 @@ namespace SearchService.Controllers
             {
                 query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
             }
+
+            query = searchParams.OrderBy switch
+            {
+                "make" => query.Sort(x => x.Ascending(a => a.Make)),
+                "new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
+                _ => query.Sort(x => x.Ascending(a => a.AuctionEnd))
+            };
 
             query.PageNumber(searchParams.PageNumber);
             query.PageSize(searchParams.PageSize);
