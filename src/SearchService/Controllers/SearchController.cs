@@ -14,8 +14,6 @@ namespace SearchService.Controllers
         {
             var query = DB.PagedSearch<Item, Item>();
 
-            query.Sort(i => i.Ascending(i => i.Make));
-
             if (!string.IsNullOrEmpty(searchParams.SearchTerm))
             {
                 query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
