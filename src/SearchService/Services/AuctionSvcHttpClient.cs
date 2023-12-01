@@ -22,7 +22,7 @@ namespace SearchService.Services
                 .ExecuteFirstAsync();
 
             return await _httpClient.GetFromJsonAsync<List<Item>>(_config["AuctionServiceUrl"] 
-                + "api/auctions?date=" + lastUpdated);
+                + "/api/auctions?date=" + lastUpdated);
         }
     }
 }
